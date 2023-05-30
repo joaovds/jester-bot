@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+
+  "jester/internal/jester"
 )
 
 func loadEnv() {
@@ -22,6 +24,14 @@ func main() {
     log.Fatal("Token não especificado")
   }
   
-  log.Println("Jester!")
+  jester, err := jester.NewJester(token)
+  if err != nil {
+    log.Fatal("Erro ao criar Jester...:", err)
+  }
+
+  err = jester.JesterRun()
+  if err != nil {
+    log.Fatal("Erro ao iniciar Jester...:", err)
+  }
 }
 

@@ -39,7 +39,7 @@ func (jester *Jester) JesterRun() error {
   signal.Notify(closeApp, os.Interrupt, syscall.SIGTERM)
   <-closeApp
 
-  // jester.session.Close()
+  jester.session.Close()
 
   log.Println("Jester parado!...")
 
@@ -47,8 +47,10 @@ func (jester *Jester) JesterRun() error {
 }
 
 func (jester *Jester) handleCommand(session *discordgo.Session, messageCreate *discordgo.MessageCreate) {
+  log.Printf("Mensagem recebida: %s", messageCreate.Content)
   if messageCreate.Content == "!jcls" {
-    log.Print("Limpando...")
+    log.Println("Limpando...")
+    log.Println("ServerID: ", messageCreate.GuildID, " CanalID: ", messageCreate.ChannelID);
   }
 }
 

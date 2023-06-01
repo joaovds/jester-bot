@@ -6,7 +6,8 @@ import (
 
 	"github.com/joho/godotenv"
 
-  "jester/internal/jester"
+	"jester/internal/commands"
+	"jester/internal/jester"
 )
 
 func loadEnv() {
@@ -28,6 +29,8 @@ func main() {
   if err != nil {
     log.Fatal("Erro ao criar Jester...:", err)
   }
+
+  jester.RegisterCommand("cls", &commands.JclsCommand{})
 
   err = jester.JesterRun()
   if err != nil {

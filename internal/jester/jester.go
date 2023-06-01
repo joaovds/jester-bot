@@ -4,13 +4,20 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
 )
 
+type Command interface {
+  HandleCommand(session *discordgo.Session, messageCreate *discordgo.MessageCreate) error
+}
+
 type Jester struct {
   session *discordgo.Session
+  prefix  string
+  commands map[string]Command
 }
 
 func NewJester(token string) (*Jester, error) {
@@ -19,20 +26,28 @@ func NewJester(token string) (*Jester, error) {
     return nil, err
   }
 
+  prefix := "!j"
+
   return &Jester{
-    session,
+    session: session,
+    prefix: prefix,
+    commands: make(map[string]Command),
   }, nil
 }
 
-func (jester *Jester) JesterRun() error {
-  jester.session.AddHandler(jester.handleCommand)
+func (jester *Jester) RegisterCommand(name string, command Command) {
+  jester.commands[name] = command
+}
 
+func (jester *Jester) JesterRun() error {
   err := jester.session.Open()
   if err != nil {
     return err
   }
 
   log.Println("Jester em execução!... (Ctrl+C para parar)")
+
+  jester.session.AddHandler(jester.handleCommand)
 
   closeApp := make(chan os.Signal, 1)
 
@@ -47,10 +62,21 @@ func (jester *Jester) JesterRun() error {
 }
 
 func (jester *Jester) handleCommand(session *discordgo.Session, messageCreate *discordgo.MessageCreate) {
-  log.Printf("Mensagem recebida: %s", messageCreate.Content)
-  if messageCreate.Content == "!jcls" {
-    log.Println("Limpando...")
-    log.Println("ServerID: ", messageCreate.GuildID, " CanalID: ", messageCreate.ChannelID);
+  if !strings.HasPrefix(messageCreate.Content, jester.prefix) {
+    return
+  }
+
+  args := strings.Split(messageCreate.Content, " ")
+  command := strings.TrimPrefix(args[0], jester.prefix)
+
+  commandInstance, ok := jester.commands[command]
+  if !ok {
+    return
+  }
+
+  err := commandInstance.HandleCommand(session, messageCreate)
+  if err != nil {
+    log.Println("Erro ao executar comando:", err)
   }
 }
 

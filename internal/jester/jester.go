@@ -49,6 +49,39 @@ func (jester *Jester) JesterRun() error {
 func (jester *Jester) handleCommand(session *discordgo.Session, messageCreate *discordgo.MessageCreate) {
   if messageCreate.Content == "!jcls" {
     log.Print("Limpando...")
+
+    channel, err := session.Channel(messageCreate.ChannelID)
+    if err != nil {
+      log.Println("Erro ao obter configurações do canal:", err)
+      return
+    }
+
+    _, err = session.ChannelDelete(messageCreate.ChannelID)
+    if err != nil {
+      log.Println("Erro ao excluir canal:", err)
+      return
+    }
+
+    newChannel, err := session.GuildChannelCreate(messageCreate.GuildID, channel.Name, discordgo.ChannelTypeGuildText)
+    if err != nil {
+      log.Println("Erro ao criar novo canal:", err)
+      return
+    }
+
+    newChannelConfig := discordgo.ChannelEdit{
+      Name: channel.Name,
+      Topic: channel.Topic,
+      PermissionOverwrites: channel.PermissionOverwrites,
+      ParentID: channel.ParentID,
+    }
+
+    _, err = session.ChannelEdit(newChannel.ID, &newChannelConfig)
+    if err != nil {
+			log.Println("Erro ao atualizar canal:", err)
+			return
+		}
+
+		log.Println("Canal excluído e recriado com sucesso!")
   }
 }
 

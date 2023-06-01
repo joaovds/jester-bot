@@ -12,6 +12,8 @@ import (
 
 type Command interface {
   HandleCommand(session *discordgo.Session, messageCreate *discordgo.MessageCreate) error
+  Name() string
+  Description() string
 }
 
 type Jester struct {
@@ -37,6 +39,10 @@ func NewJester(token string) (*Jester, error) {
 
 func (jester *Jester) RegisterCommand(name string, command Command) {
   jester.commands[name] = command
+}
+
+func (jester *Jester) Commands() map[string]Command {
+  return jester.commands
 }
 
 func (jester *Jester) JesterRun() error {

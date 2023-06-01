@@ -44,3 +44,12 @@ func (command *JclsCommand) HandleCommand(session *discordgo.Session, messageCre
   log.Println("Canal excluído e recriado com sucesso!")
   return nil
 }
+
+func (command *JclsCommand) Name() string {
+  return "!jcls"
+}
+
+func (command *JclsCommand) Description() string {
+  return "Comando para deletar o histórico de mensagens do canal"
+}
+

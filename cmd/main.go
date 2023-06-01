@@ -17,6 +17,13 @@ func loadEnv() {
   }
 }
 
+func RegisterCommands(jester *jester.Jester) {
+  jester.RegisterCommand("cls", &commands.JclsCommand{})
+
+  helpCommands := commands.NewHelpCommand(jester.Commands())
+  jester.RegisterCommand("help", helpCommands)
+}
+
 func main() {
   loadEnv()
 
@@ -30,7 +37,7 @@ func main() {
     log.Fatal("Erro ao criar Jester...:", err)
   }
 
-  jester.RegisterCommand("cls", &commands.JclsCommand{})
+  RegisterCommands(jester)
 
   err = jester.JesterRun()
   if err != nil {

@@ -28,7 +28,7 @@ func NewJester(token string) (*Jester, error) {
     return nil, err
   }
 
-  prefix := "!j"
+  prefix := "!"
 
   return &Jester{
     session: session,

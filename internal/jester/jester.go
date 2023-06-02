@@ -46,6 +46,7 @@ func (jester *Jester) Commands() map[string]Command {
 }
 
 func (jester *Jester) JesterRun() error {
+  jester.session.AddHandler(jester.handleRoutine)
   err := jester.session.Open()
   if err != nil {
     return err
@@ -54,7 +55,6 @@ func (jester *Jester) JesterRun() error {
   log.Println("Jester em execução!... (Ctrl+C para parar)")
 
   jester.session.AddHandler(jester.handleCommand)
-  jester.session.AddHandler(jester.handleRoutine)
 
   closeApp := make(chan os.Signal, 1)
 
@@ -68,7 +68,7 @@ func (jester *Jester) JesterRun() error {
   return nil
 }
 
-func (jester *Jester) handleRoutine(session *discordgo.Session, messageCreate *discordgo.Ready) {
+func (jester *Jester) handleRoutine(session *discordgo.Session, _ *discordgo.Connect) {
   HandleCoffee(session)
 }
 

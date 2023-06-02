@@ -54,6 +54,7 @@ func (jester *Jester) JesterRun() error {
   log.Println("Jester em execução!... (Ctrl+C para parar)")
 
   jester.session.AddHandler(jester.handleCommand)
+  jester.session.AddHandler(jester.handleRoutine)
 
   closeApp := make(chan os.Signal, 1)
 
@@ -65,6 +66,10 @@ func (jester *Jester) JesterRun() error {
   log.Println("Jester parado!...")
 
   return nil
+}
+
+func (jester *Jester) handleRoutine(session *discordgo.Session, messageCreate *discordgo.Ready) {
+  HandleCoffee(session)
 }
 
 func (jester *Jester) handleCommand(session *discordgo.Session, messageCreate *discordgo.MessageCreate) {
@@ -84,5 +89,33 @@ func (jester *Jester) handleCommand(session *discordgo.Session, messageCreate *d
   if err != nil {
     log.Println("Erro ao executar comando:", err)
   }
+}
+
+func HandleCoffee(session *discordgo.Session) error {
+  log.Print("Hora do café...")
+
+  for _, server := range session.State.Guilds {
+		systemChannel, err := session.State.Channel(server.SystemChannelID)
+		if err != nil {
+			log.Println("Erro ao obter informações do canal principal:", err)
+			continue
+		}
+
+		permissions, err := session.State.UserChannelPermissions(session.State.User.ID, systemChannel.ID)
+		if err != nil {
+			log.Println("Erro ao obter permissões do canal principal:", err)
+			continue
+		}
+
+		if permissions&discordgo.PermissionViewChannel != 0 && permissions&discordgo.PermissionSendMessages != 0 {
+			_, err := session.ChannelMessageSend(systemChannel.ID, "A hora do café!")
+      _, err = session.ChannelMessageSend(server.ID, "## Opaaaa! Hora do cafezinho!!!")
+			if err != nil {
+				log.Println("Erro ao enviar mensagem:", err)
+			}
+		}
+	}
+
+  return nil
 }
 

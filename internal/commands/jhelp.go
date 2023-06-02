@@ -24,10 +24,11 @@ func (command *JHelpCommand) HandleCommand(session *discordgo.Session, messageCr
   log.Print("Help...")
 
   var helpText strings.Builder
-  helpText.WriteString("Lista de comandos do Jester:\n")
+
+  helpText.WriteString("## Lista de comandos do *Jester*:\n\n")
 
   for commandName, currentCommand := range command.commands {
-    helpText.WriteString(fmt.Sprintf("%s: %s\n", commandName, currentCommand.Description()))
+    helpText.WriteString(fmt.Sprintf("**%s:** *%s*\n", commandName, currentCommand.Description()))
   }
 
   _, err := session.ChannelMessageSend(messageCreate.ChannelID, helpText.String())

@@ -40,7 +40,7 @@ func (command *JHelpCommand) HandleCommand(session *discordgo.Session, messageCr
 }
 
 func (command *JHelpCommand) Name() string {
-  return "!jhelp"
+  return "!help"
 }
 
 func (command *JHelpCommand) Description() string {

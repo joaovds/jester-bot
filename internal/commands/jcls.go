@@ -46,7 +46,7 @@ func (command *JclsCommand) HandleCommand(session *discordgo.Session, messageCre
 }
 
 func (command *JclsCommand) Name() string {
-  return "!jcls"
+  return "!cls"
 }
 
 func (command *JclsCommand) Description() string {

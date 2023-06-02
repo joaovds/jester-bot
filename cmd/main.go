@@ -20,8 +20,12 @@ func loadEnv() {
 func RegisterCommands(jester *jester.Jester) {
   jester.RegisterCommand("cls", &commands.JclsCommand{})
 
+  jester.RegisterCommand("lunch", &commands.JLunchCommand{})
+
   helpCommands := commands.NewHelpCommand(jester.Commands())
   jester.RegisterCommand("help", helpCommands)
+
+  
 }
 
 func main() {

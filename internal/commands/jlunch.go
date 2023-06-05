@@ -25,6 +25,7 @@ func (command *JLunchCommand) HandleCommand(session *discordgo.Session, messageC
 		"Caiçara 🌊",
 		"La Bombonera 🍫",
 		"New Era 🆕",
+		"Wok🍝"
 	}
 	
 	rand.Seed(time.Now().UnixNano())

@@ -28,6 +28,26 @@ func (command *JclsCommand) HandleCommand(session *discordgo.Session, messageCre
     return err
   }
 
+if newChannel.Name == "geral" {
+  // Define a posição do novo canal para 0, para fixá-lo no topo da lista
+  _, err = session.ChannelEditComplex(newChannel.ID, &discordgo.ChannelEdit{
+      Position: 0,
+  })
+  if err != nil {
+      log.Println("Erro ao fixar canal 'geral':", err)
+      return err
+  }
+
+  // Redireciona os usuários para o novo canal
+  _, err = session.ChannelMessageSend(messageCreate.ChannelID, fmt.Sprintf("O canal 'geral' foi recriado. Clique aqui para acessar: <#%s>", newChannel.ID))
+  if err != nil {
+      log.Println("Erro ao enviar mensagem de redirecionamento:", err)
+      return err
+  }
+}
+
+  
+
   newChannelConfig := discordgo.ChannelEdit{
     Name: channel.Name,
     Topic: channel.Topic,

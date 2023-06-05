@@ -2,7 +2,7 @@ package commands
 
 import (
   "log"
-
+  "fmt"
   "github.com/bwmarrin/discordgo"
 )
 
